@@ -1,0 +1,20 @@
+name: Full Mirror GitHub → GitLab | buck Vermessung
+
+on:
+  push:
+  schedule:
+    - cron: '*/15 * * * *'
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone mirror
+        run: |
+          git clone --bare https://github.com/laravel/vue-starter-kit.git repo
+          cd repo
+
+          git push --prune https://oauth2:${{ secrets.GITLAB_TOKEN_BUCK }}@git.buck-vermessung.de/it-und-digitalisierung/vue-starter-kit-mirror.git \
+            +refs/heads/*:refs/heads/* \
+            +refs/tags/*:refs/tags/*
